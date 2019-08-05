@@ -8,13 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/index.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\1_7_rotate_matrix.js"
+            "program": "${file}"
         }
     ]
 }

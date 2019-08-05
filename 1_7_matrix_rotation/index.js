@@ -1,3 +1,5 @@
+const { compareMatrix } = require('../utilities');
+
 const getCoords = (row, col) => ({ row, col });
 
 const getPoints = (n, i, j) => {
@@ -91,23 +93,6 @@ const rotateMatrix = (m) => {
     }
 
     return m;
-};
-
-
-const compareMatrix = (a, b) => {
-    if (!Array.isArray(a) || !Array.isArray(b)) {
-        return a === b;
-    } else {
-        let out = true;
-        for (let i = 0; i < Math.max(a.length, b.length); i++) {
-            if (out) {
-                out = compareMatrix(a[i], b[i]);
-            } else {
-                return false;
-            }
-        }
-        return out;
-    }
 };
 
 
