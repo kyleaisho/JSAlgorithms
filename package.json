@@ -4,7 +4,8 @@
   "description": "Algorithms based on CtCI",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "test:debug": "node --inspect-brk node_modules/jasmine/bin/jasmine.js"
   },
   "repository": {
     "type": "git",

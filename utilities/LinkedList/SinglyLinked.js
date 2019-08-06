@@ -1,6 +1,7 @@
 const { Node } = require('./Node');
 
 function SinglyLinkedList(elements) {
+  if (!elements) return;
   if (!Array.isArray(elements)) {
     elements = [elements];
   }
@@ -16,7 +17,20 @@ SinglyLinkedList.prototype.insert = function(data) {
   node.setNext(tmp);
 };
 
-SinglyLinkedList.prototype.search = function(data) {
+SinglyLinkedList.prototype.insertAtEnd = function(data) {
+  const node = new Node(data);
+
+  if (!this._root) {
+    this._root = new Node(data);
+    return;
+  }
+
+  const { prev: endNode } = this.search(null, true);
+
+  endNode.setNext(node);
+};
+
+SinglyLinkedList.prototype.search = function(data, findEnd = false) {
   if (!this._root) throw new Error('Empty list');
 
   let prev = this._root;
@@ -28,7 +42,7 @@ SinglyLinkedList.prototype.search = function(data) {
   }
 
   while (curr) {
-    if (curr.getData() === data) {
+    if (!findEnd && curr.getData() === data) {
       break;
     }
 
@@ -63,6 +77,11 @@ SinglyLinkedList.prototype.toArray = function() {
 
   return arr;
 }
+
+SinglyLinkedList.prototype.print = function() {
+  const arr = this.toArray().map(e => `[${e}] -> `);
+  console.log(arr.join(''))
+};
 
 module.exports = {
   SinglyLinkedList

@@ -3,10 +3,25 @@
  * nodes at each depths
  */
 
-/**
- * Since we are dealing with 'each depth' binary search makes the most sense
- * since it deals with an entire depth before moving on. We will then use an
- * ancillary array to keep track of the roots for each depth
- */
+const { SinglyLinkedList } = require('../utilities/LinkedList/SinglyLinked');
 
-const LL = require('../utilities/LinkedList/SinglyLinked');
+function createDepthLists(root, list, depth = 0) {
+    if (!root) {
+        return;
+    }
+
+    while (!list[depth]) {
+        list.push(new SinglyLinkedList());
+    }
+
+    const ll = list[depth];
+
+    ll.insertAtEnd(root.data);
+
+    createDepthLists(root.left, list, depth + 1);
+    createDepthLists(root.right, list, depth + 1);
+}
+
+module.exports = {
+    createDepthLists,
+};
