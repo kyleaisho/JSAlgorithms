@@ -19,7 +19,7 @@
      [0, 0, 0],
  ];
 
-const getPath = (grid, row = 0, col = 0, path = []) => {
+const getPath = (grid, row = 0, col = 0, path = [], visited = {}) => {
     if (row === grid.length - 1 && col === grid[0].length) {
         return true;
     }
@@ -31,8 +31,11 @@ const getPath = (grid, row = 0, col = 0, path = []) => {
         return false
     }
 
+    if (visited[`${row}_${col}`]) return false;
+
     if (square === 0) {
         // choose
+        visited[`${row}_${col}`] = true;
         path.push({ row, col });
 
         // explore
