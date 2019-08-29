@@ -1,11 +1,15 @@
-function printAllBinary(n, s = '') {
+function printAllBinary(n,  strings = [], s = '') {
     if (n === 0) {
-        console.log(s);
+        strings.push(s);
     }
     else {
-        printAllBinary(n - 1, s + '0');
-        printAllBinary(n - 1, s + '1');
+        printAllBinary(n - 1, strings, s + '0');
+        printAllBinary(n - 1, strings, s + '1');
     }
 }
 
-printAllBinary(5)
+(function() {
+    const strings = [];
+    printAllBinary(5, strings);
+    strings.forEach(s => console.log(s));
+}())
