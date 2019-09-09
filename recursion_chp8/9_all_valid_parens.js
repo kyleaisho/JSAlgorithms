@@ -21,12 +21,33 @@ function _gen(n, container, comb = '', setOfCombs = new Set()) {
 function genValidParens(n) {
   const container = [];
 
-  _gen(n, container);
+  genEfficient(n, container);
 
   return container;
 }
 
-[1, 2, 3, 4, 5].forEach(n => {
-  console.log('-----' + n + '-----');
-  genValidParens(n).forEach(n => console.log(n));
-});
+function genEfficient(n, container) {
+  return _genEfficient(n, n, container);
+}
+
+function indent(n) {
+  return '  '.repeat(n);
+}
+
+function _genEfficient(open, close, container, str = '') {
+  if (open < 0  || close < open) return; // invalid state
+  console.log(`${indent(str.length)}_genEfficient: ${open}, ${close}, "${str}"`)
+  if (open === 0 && close === 0) {
+    container.push(str);
+  } else {
+    _genEfficient(open - 1, close, container, str + '(');
+    _genEfficient(open, close - 1, container, str + ')');
+  }
+}
+
+genValidParens(3)
+
+// [1, 2, 3, 4, 5].forEach(n => {
+//   console.log('-----' + n + '-----');
+//   genValidParens(n).forEach(n => console.log(n));
+// });
