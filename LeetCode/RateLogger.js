@@ -20,15 +20,20 @@ var Logger = function() {
 Logger.prototype.shouldPrintMessage = function(timestamp, message) {
   this.updateLogs(timestamp);
 
-  const shouldPrint = this.hasLogPrinted(message);
+  if (this.isMessageInLog(message)) {
+      return false;
+  }
 
   this.insertLog(timestamp, message);
 
-  return shouldPrint;
+  return true;
 };
 
-Logger.prototype.hasLogPrinted = function(message) {
-  return this.logs.every(map => !map[message]);
+Logger.prototype.isMessageInLog = function(message) {
+    const nonEmpty = this.logs.filter(m => !!m);
+    const isMessageInLogs = nonEmpty.some(map => !!map[message]);
+
+    return nonEmpty.length > 0 && isMessageInLogs;
 };
 
 Logger.prototype.insertLog = function(timestamp, message) {
@@ -55,25 +60,39 @@ Logger.prototype.updateLogs = function(timestamp) {
   const shouldUpdateTime = timestamp > this.currentTime;
 
   if (shouldUpdateTime) {
-    const { prev, curr } = this.updateTime();
+    const { prev, curr } = this.updateTime(timestamp);
     this.updateIndex(prev, curr);
   }
 };
 
 Logger.prototype.updateIndex = function(oldTime, newTime) {
   // Snap the difference to be no greater than the size of the array
-  const diff = Math.min(LOGGING_SECONDS, newTime - oldTime);
+  let diff = Math.min(LOGGING_SECONDS, newTime - oldTime);
 
   // delete indexes which are the oldest
-  const idx = this.currentIndex + 1;
+  let idx = this.currentIndex + 1;
   while (diff) {
     this.logs[idx] = null;
-    idx = (idx + 1) % LOGGING_SECONDS;
     diff--;
-  }
 
-  this.currentIndex = idx;
+    if (diff < 1) {
+        this.currentIndex = idx;
+    }
+    idx = (idx + 1) % LOGGING_SECONDS;
+  }
 };
+
+const commands = ["Logger","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage","shouldPrintMessage"]
+const vals = [[],[0,"A"],[0,"B"],[0,"C"],[9,"A"],[9,"B"],[9,"C"],[10,"A"],[10,"B"],[10,"C"],[11,"A"]]
+let logger;
+commands.forEach((command, i) => {
+    if (command === 'Logger') {
+        logger = new Logger();
+    } else {
+        const [ timestamp, message ] = vals[i];
+        console.log(logger.shouldPrintMessage(timestamp, message));
+    }
+})
 
 /**
  * Your Logger object will be instantiated and called as such:
