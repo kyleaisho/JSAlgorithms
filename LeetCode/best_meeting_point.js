@@ -10,19 +10,15 @@ var minTotalDistance = function(grid) {
 
 const getKey = (row, col) => `${row}_${col}`;
 
-const getNext = (row, col, grid) => {
+const getNext = (row, col, grid, visited) => {
   return [
-    { row: row + 1, col },
-    { row: row - 1, col },
-    { row, col: col + 1 },
-    { row, col: col - 1 },
-    { row: row + 1, col: col + 1 },
-    { row: row - 1, col: col + 1 },
-    { row: row + 1, col: col - 1 },
-    { row: row - 1, col: col - 1 }
+    { row: row + 1, col, visited },
+    { row: row - 1, col, visited },
+    { row, col: col + 1, visited },
+    { row, col: col - 1, visited },
   ].filter(({ row, col }) => {
     const r = grid[row] || [];
-    return Number.isInteger(r[col]);
+    return Number.isInteger(r[col]) && !visited[getKey(row, col)];
   });
 };
 
@@ -30,8 +26,9 @@ const createEntry = () => ({ cost: null, visitors: 0 });
 
 const markInMap = (cost, key, map) => {
   if (!map[key]) map[key] = createEntry();
-
+  
   const entry = map[key];
+  console.log(`${'  '.repeat(cost)} coord: ${key} visitors: ${entry.visitors}`);
   entry.visitors++;
 
   entry.cost = entry.cost || 0;
@@ -44,14 +41,19 @@ const hasMeet = (map, numPeople) => {
 
 const minDistance = (grid, numPeople, peeps, map = {}, cost = 0) => {
   if (hasMeet(map, numPeople)) {
-    return Object.values(map).reduce((acc, curr) => Math.min(acc, curr), Number.INFINITY);
+    return Object.values(map).filter(location => location.visitors === numPeople).reduce((acc, curr) => Math.min(acc, curr.cost), Number.MAX_SAFE_INTEGER)
   }
 
   const next = [];
 
   for (let i = 0; i < peeps.length; i++) {
-    const { row, col } = peeps[i];
-    next.push(...getNext(row, col, grid));
+    const { row, col, visited } = peeps[i];
+
+    if (visited[getKey(row, col)]) continue;
+
+    visited[getKey(row, col)] = true;
+
+    next.push(...getNext(row, col, grid, visited));
 
     markInMap(cost, getKey(row, col), map);
   }
@@ -64,13 +66,13 @@ const getPeople = grid => {
 
   grid.forEach((r, row) =>
     r.forEach((c, col) => {
-      if (c === 1) peeps.push({ row, col });
+      if (c === 1) peeps.push({ row, col, visited: {} });
     })
   );
 
   return peeps;
 };
 
-const grid = [[1, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 0, 1, 0, 0]];
+const grid = [[1,0,0,0,1],[0,0,0,0,0],[0,0,1,0,0]];
 
 console.log(minTotalDistance(grid));
