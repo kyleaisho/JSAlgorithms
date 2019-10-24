@@ -18,7 +18,7 @@ var trap = function(height) {
 };
 
 const build = heights => {
-  const nodes = [];
+  const nodes = new Array(heights.length);
   const unlinked = {};
   // Use a structure similar to a skip list with pointers
   // to the next node with the same height
@@ -54,7 +54,7 @@ const build = heights => {
       unlinked[j] = i;
     }
 
-    nodes.push(node);
+    nodes[i] = node;
   }
 
   return nodes;
@@ -65,7 +65,9 @@ const calculateWater = nodes => {
   let water = 0;
 
   for (let i = 0; i < nodes.length; ++i) {
-    const node = node[i];
+    const node = nodes[i];
+
+    if (!node) continue;
 
     node.next.forEach(nextNode => {
       if (nextNode) {
@@ -77,4 +79,5 @@ const calculateWater = nodes => {
   return water;
 };
 
-console.log(trap([0, 1, 0, 2]));
+console.log(trap(arr));
+
