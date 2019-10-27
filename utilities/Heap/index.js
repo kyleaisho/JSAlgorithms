@@ -44,12 +44,6 @@ Heap.prototype = {
       this.swap(k, next);
       this.bubbleDown(next);
     }
-
-    // if (right !== undefined && right !== null && curr > left) {
-    // } else if (right !== undefined && right !== null && curr > right) {
-    //   this.swap(k, leftChild + 1);
-    //   this.bubbleDown(leftChild + 1);
-    // }
   },
 
   swap(idx1, idx2) {
