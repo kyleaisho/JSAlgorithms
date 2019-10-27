@@ -33,3 +33,8 @@ const infiniteCurry = (fn) => {
 
     return next([]);
 }
+
+const _add = (x, y) => x + y;
+const add = infiniteCurry(_add);
+
+console.log(add(1, 2)(3)(4)(5)());
