@@ -1,10 +1,6 @@
-function Heap() {
-  this._heap = [null];
-}
-
 Heap.prototype = {
-  insert(val) {
-    this._heap.push(val);
+  insert(node) {
+    this._heap.push(node);
     this.bubbleUp(this._heap.length - 1);
   },
 
@@ -14,8 +10,8 @@ Heap.prototype = {
 
   bubbleUp(idx) {
     const parentIdx = this.getParentIndex(idx);
-    const curr = this._heap[idx];
-    const parent = this._heap[parentIdx];
+    const { val: curr } = this._heap[idx];
+    const { val: parent } = this._heap[parentIdx];
 
     if (curr < parent) {
       // swap the two and call again with new poistion
@@ -33,14 +29,15 @@ Heap.prototype = {
   },
 
   bubbleDown(k) {
-    const { left = Number.POSITIVE_INFINITY, right = Number.POSITIVE_INFINITY } = this.getChildren(k);
+    const { left = { val: Number.POSITIVE_INFINITY }, right = { val: Number.POSITIVE_INFINITY } } = this.getChildren(k);
 
-    const curr = this._heap[k];
+    const { val: curr } = this._heap[k];
     const leftChild = 2 * k;
 
-    const next = left < right ? leftChild : leftChild + 1;
+    const next = left.val < right.val ? leftChild : leftChild + 1;
+    const { val: nextVal } = this._heap[next];
 
-    if (curr > this._heap[next]) {
+    if (curr > nextVal) {
       this.swap(k, next);
       this.bubbleDown(next);
     }
@@ -65,3 +62,5 @@ Heap.prototype = {
     return min;
   }
 };
+
+const
