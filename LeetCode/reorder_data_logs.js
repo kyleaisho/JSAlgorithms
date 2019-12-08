@@ -16,12 +16,10 @@ var reorderLogFiles = function(logs) {
     
     // Organize letLogs lexicographicall
     letLogs.sort((a, b) => {
-        const first = a.split(' ');
-        const second = b.split(' ');
-        first.shift();
-        second.shift();
+        const first = a.slice(a.indexOf(' ') + 1);
+        const second = b.slice(b.indexOf(' ') + 1);
         
-        return first.join(' ') < second.join(' ') ? -1 : 1;
+        return first < second ? -1 : 1;
     })
     
     return [...letLogs, ...digLogs];
