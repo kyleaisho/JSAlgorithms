@@ -4,59 +4,37 @@
  * @return {boolean}
  */
 var exist = function(board, word) {
-  const path = word.split('');
-
-  return _findWord(board, path);
+  const starts = [];
+  
+  board.forEach((r, row) => r.forEach((c, col) => {
+      if (c === word[0]) {
+          starts.push([ row, col ])
+      }
+  }))
+  return starts.some((coords) => {
+      return _exist(board, ...coords, word.split(''), 0)
+  });
 };
 
-const findCoordsForLetter = (board, letter) => {
-  const coords = [];
-
-  board.forEach((row, rIdx) =>
-    row.forEach((cell, cIdx) => {
-      if (cell === letter) coords.push({ row: rIdx, col: cIdx });
-    })
-  );
-
-  return coords;
-};
-
-const getKey = (row, col) => `${row}_${col}`;
-
-const isSafe = ({ row, col }, board) => {
-  const r = board[row] || [];
-  const cell = r[col];
-
-  return !!cell;
-};
-
-const explore = (board, { row, col }, path, visited = {}) => {
-  if (path.length < 1) return true;
-  if (!isSafe({ row, col }, board)) return false;
-  // if (visited[getKey(row, col)]) return false;
-
-  const cell = board[row][col];
+const _exist = (board, row, col, letters, index) => {
+  if (index >= letters.length) return true;
+  if (row < 0 || row >= board.length || col < 0 || col > board[0].length) return false;
+  
+  const letter = letters[index];
+  const boardLetter = board[row][col]
+  if (letter !== boardLetter) return false;
+  
+  // Choose
   board[row][col] = null;
-  if (cell === path[0]) {
-    path.shift();
-    return (
-      explore(board, { row: row - 1, col }, path, visited) || // up
-      explore(board, { row: row + 1, col }, path, visited) || // down
-      explore(board, { row, col: col - 1 }, path, visited) || // left
-      explore(board, { row, col: col + 1 }, path, visited)
-    ); // right
-  }
-  board[row][col] = cell;
-  return false;
-};
-
-const _findWord = (board, path) => {
-  const firstLetter = findCoordsForLetter(board, path[0]);
-
-  return firstLetter.some(start => explore(board, start, path.slice()));
-};
-
-const board = [['C', 'A', 'A'], ['A', 'A', 'A'], ['B', 'C', 'D']];
-const path = 'AAB';
-
-console.log(exist(board, path));
+  
+  // Explore
+  const found = _exist(board, row + 1, col, letters, index + 1) ||
+      _exist(board, row - 1, col, letters, index + 1) ||
+      _exist(board, row, col + 1, letters, index + 1) ||
+      _exist(board, row, col - 1, letters, index + 1);
+  
+  // Unchoose
+  board[row][col] = boardLetter;
+  
+  return found;
+}
