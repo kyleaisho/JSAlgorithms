@@ -35,9 +35,11 @@ function indent(n) {
 }
 
 function _genEfficient(open, close, container, str = '') {
+  // console.log(`${indent(str.length)}_genEfficient: ${open}, ${close}, "${str}"`)
   if (open < 0  || close < open) return; // invalid state
-  console.log(`${indent(str.length)}_genEfficient: ${open}, ${close}, "${str}"`)
+  // console.log(`${indent(str.length)}_genEfficient: ${open}, ${close}, "${str}"`)
   if (open === 0 && close === 0) {
+    // console.log(`${indent(str.length)}push: ${open}, ${close}, "${str}"`)
     container.push(str);
   } else {
     _genEfficient(open - 1, close, container, str + '(');
