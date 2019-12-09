@@ -1,5 +1,5 @@
-const createNode = (data) => ({
-    data,
+const createNode = (val) => ({
+    val,
     left: null,
     right: null,
 });
